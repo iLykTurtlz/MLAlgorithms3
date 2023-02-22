@@ -145,7 +145,7 @@ class ClassifierPerceptron(Classifier):
             x: une description
         """
 
-        return np.dot(x,self.w)
+        return np.vdot(x,self.w)
     
     def predict(self, x):
         """ rend la prediction sur x (soit -1 ou soit +1)
