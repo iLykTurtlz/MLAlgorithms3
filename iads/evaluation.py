@@ -12,6 +12,7 @@ Année: LU3IN026 - semestre 2 - 2022-2023, Sorbonne Université
 # import externe
 import numpy as np
 import pandas as pd
+import copy
 
 # ------------------------ 
 #TODO: à compléter  plus tard
@@ -38,4 +39,18 @@ def analyse_perfs(L):
         rend le tuple (moyenne, écart-type)
     """
     return (np.mean(L),np.std(L))
+
+def validation_croisee(C, DS, nb_iter):
+    """ Classifieur * tuple[array, array] * int -> tuple[ list[float], float, float]
+    """
+    X, Y = DS   
+    perf = []
+    for i in range(nb_iter):
+        Xapp,Yapp,Xtest,Ytest = ev.crossval_strat(X,Y,nb_iter,i)
+        classifier = copy.deepcopy(C)
+        classifier.train(Xapp, Yapp)
+        perf.append(classifier.accuracy(Xtest,Ytest))
+        
+    (perf_moy, perf_sd) = analyse_perfs(perf)
+    return (perf, perf_moy, perf_sd)
 
