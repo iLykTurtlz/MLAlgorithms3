@@ -80,7 +80,7 @@ class Classifier:
 class ClassifierPerceptron(Classifier):
     """ Perceptron de Rosenblatt
     """
-    def __init__(self, input_dimension, learning_rate, init=True ):
+    def __init__(self, input_dimension, learning_rate=0.01, init=True ):
         """ Constructeur de Classifier
             Argument:
                 - input_dimension (int) : dimension de la description des exemples (>0)
