@@ -144,8 +144,9 @@ class ClassifierPerceptron(Classifier):
         """ rend le score de prédiction sur x (valeur réelle)
             x: une description
         """
-
+        
         return np.vdot(x,self.w)
+
     
     def predict(self, x):
         """ rend la prediction sur x (soit -1 ou soit +1)
@@ -287,7 +288,7 @@ def shannon(P):
     k = p.shape[0]  #len == nb catégories
     if k==1:        #parce que python refuse de prendre le log de 0
         return 0
-    p = p[p!=0]     #pareil
+    p = p[p>0]     #pareil
     return - np.sum( p * np.emath.logn(k,p))#np.multiply( p, np.emath.logn(k,p) ) )  )
     
 def entropie(Y):
