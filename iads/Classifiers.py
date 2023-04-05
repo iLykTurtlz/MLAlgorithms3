@@ -436,7 +436,7 @@ def construit_AD(X,Y,epsilon,LNoms = []):
     return noeud
 
 
-class ClassifierArbreDecision(cl.Classifier):
+class ClassifierArbreDecision(Classifier):
     """ Classe pour représenter un classifieur par arbre de décision
     """
     
