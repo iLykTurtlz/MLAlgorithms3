@@ -131,3 +131,30 @@ def CHA(DF,linkage='centroid', verbose=False,dendrogramme=False):
     À rajouter plus tard: critère de distance modifiable.
     """
     clustering_hierarchique(DF, linkage=linkage, verbose=verbose, dendrogramme=dendrogramme)
+
+
+def CHA_centroid(DF, verbose=False, dendrogramme=False):
+    P = initialise_CHA(DF)
+    result = []
+    while len(P) > 1:
+        next_key = max(P.keys()) + 1        #autre méthode : garder l'ancien P et additionner les longueurs de P[removed_key1] et de P[removed_key2]
+        P, removed_key1, removed_key2, min_distance = fusionne(DF, P, verbose=verbose)
+        result.append([removed_key1, removed_key2, min_distance, len(P[next_key])])
+    
+    if dendrogramme:
+        # Paramètre de la fenêtre d'affichage: 
+        plt.figure(figsize=(30, 15)) # taille : largeur x hauteur
+        plt.title('Dendrogramme', fontsize=25)    
+        plt.xlabel("Indice d'exemple", fontsize=25)
+        plt.ylabel('Distance', fontsize=25)
+
+        # Construction du dendrogramme pour notre clustering :
+        scipy.cluster.hierarchy.dendrogram(
+            result, 
+            leaf_font_size=24.,  # taille des caractères de l'axe des X
+        )
+
+        # Affichage du résultat obtenu:
+        plt.show()
+    
+    return result
