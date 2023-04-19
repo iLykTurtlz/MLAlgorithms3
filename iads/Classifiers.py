@@ -175,6 +175,7 @@ class ClassifierKNN(Classifier):
         #raise NotImplementedError("Please Implement this method")
         self.input_dimension = input_dimension
         self.k = k
+
         
         
     def score(self,x):
@@ -191,23 +192,13 @@ class ClassifierKNN(Classifier):
         
         nombre_pos=0
         for i in ordre:
-            if self.label_set[i] == +1:
+            if self.label_set[i] == self.labels[0]:
                 nombre_pos += 1
         p = nombre_pos/self.k
         return 2*(p-0.5)
         
-    
-        #return len([])
         
         
-        
-        '''
-        
-        # Extraction des exemples de classe -1:
-data2_negatifs = data2_desc[data2_label == -1]
-# Extraction des exemples de classe +1:
-data2_positifs = data2_desc[data2_label == +1]
-    '''
 
 
     
@@ -217,9 +208,9 @@ data2_positifs = data2_desc[data2_label == +1]
         """
         #raise NotImplementedError("Please Implement this method")
         if self.score(x) > 0:
-            return +1
+            return self.labels[0]
         else:
-            return -1 #on ne considère pas le cas score==0
+            return self.labels[1] #on ne considère pas le cas score==0
 
     def train(self, desc_set, label_set):
         """ Permet d'entrainer le modele sur l'ensemble donné
@@ -230,6 +221,7 @@ data2_positifs = data2_desc[data2_label == +1]
         #raise NotImplementedError("Please Implement this method")
         self.desc_set = desc_set
         self.label_set = label_set
+        self.labels = np.unique(self.label_set)
 
 
 
