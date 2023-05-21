@@ -14,6 +14,7 @@ Année: LU3IN026 - semestre 2 - 2022-2023, Sorbonne Université
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import random
 
 # ------------------------ 
 
@@ -73,4 +74,34 @@ def plot_frontiere(desc_set, label_set, classifier, step=30):
     plt.contourf(x1grid,x2grid,res,colors=["darksalmon","skyblue"],levels=[-1000,0,1000])
 
 
-
+def genere_train_test(desc_set, label_set, n_pos, n_neg):
+    """ permet de générer une base d'apprentissage et une base de test
+        desc_set: ndarray avec des descriptions
+        label_set: ndarray avec les labels correspondants
+        n_pos: nombre d'exemples de label +1 à mettre dans la base d'apprentissage
+        n_neg: nombre d'exemples de label -1 à mettre dans la base d'apprentissage
+        Hypothèses: 
+           - desc_set et label_set ont le même nombre de lignes)
+           - n_pos et n_neg, ainsi que leur somme, sont inférieurs à n (le nombre d'exemples dans desc_set)
+    """
+    label_set_pos = label_set[label_set == +1]
+    label_set_neg = label_set[label_set == -1]
+    desc_set_pos = desc_set[label_set == + 1]
+    desc_set_neg = desc_set[label_set == -1]
+    
+    ind_positif = random.sample([i for i in range(0,label_set_pos.shape[0])],len(label_set_pos))
+    ind_negatif = random.sample([i for i in range(0,label_set_neg.shape[0])],len(label_set_neg))
+    
+    desc_set_pos = desc_set_pos[ind_positif]
+    desc_set_neg = desc_set_neg[ind_negatif]
+    
+    label_set_pos = label_set_pos[ind_positif]
+    label_set_neg = label_set_neg[ind_negatif]
+    
+    train_desc = np.concatenate((desc_set_pos[:n_pos],  desc_set_neg[:n_neg]),axis=0)
+    train_label = np.concatenate((label_set_pos[:n_pos], label_set_neg[:n_neg]),axis=0) 
+    test_desc =  np.concatenate((desc_set_pos[n_pos:], desc_set_neg[n_neg:]),axis=0)
+    test_label = np.concatenate((label_set_pos[n_pos:], label_set_neg[n_neg:]),axis=0)
+  
+    
+    return (train_desc, train_label), (test_desc, test_label)
