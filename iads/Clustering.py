@@ -262,5 +262,13 @@ def XieBeni(Base, Centres, Affect):
     #on veut minimiser cette valeur
     return inertie_globale(Base, Affect) / min_dist_intercluster(Centres)
 
+def calculate_indices(Base, Centres, Affect):
+    """
+    Calcule Dunn, XieBeni
+    optimisation pour éviter un calcul redondant du dénominateur
+    """
+    min_dist_inter = min_dist_intercluster(Centres)
+    return max_dist_intracluster(Base, Affect) / min_dist_inter, inertie_globale(Base, Affect) / min_dist_inter
+
 
 
