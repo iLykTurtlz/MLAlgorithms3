@@ -90,3 +90,43 @@ def validation_croisee(C, DS, nb_iter):
     (perf_moy, perf_sd) = analyse_perfs(perf)
     return (perf, perf_moy, perf_sd)
 
+#Clustering
+def inertie_cluster(Ens):
+    return np.sum( np.sum(((Ens - centroide(Ens))**2)) )
+
+
+def inertie_globale(Base, U):
+    return np.sum([inertie_cluster(Base.iloc[v]) for v in U.values()])
+
+
+def min_dist_intercluster(Centres):
+    dist_min = np.inf
+    for i, centre in enumerate(Centres):
+        for j in range(i+1, Centres.shape[0]):
+            if (this_distance := clust.dist_euclidienne(centre, Centres[j])) < dist_min:
+                dist_min = this_distance
+    return dist_min
+
+
+def max_dist_intracluster(Base, Affect):
+    dist_max = -np.inf
+    for index, examples in Affect.items():
+        for i, example1 in enumerate(examples):
+            for j in range(i+1, len(examples)):
+                example2 = examples[j]
+                if (this_distance := clust.dist_euclidienne(Base.iloc[example1], Base.iloc[example2])) < dist_max:
+                    dist_max = this_distance
+    return this_distance
+
+
+def Dunn(Base, Centres, Affect):
+    #on veut minimiser
+    return max_dist_intracluster(Base, Affect) / min_dist_intercluster(Centres)
+
+
+def XieBeni(Base, Centres, Affect):
+    #on veut minimiser cette valeur
+    return inertie_globale(Base, Affect) / min_dist_intercluster(Centres)
+
+
+

@@ -158,3 +158,81 @@ def CHA_centroid(DF, verbose=False, dendrogramme=False):
         plt.show()
     
     return result
+
+
+
+#kmoyennes
+def inertie_cluster(Ens):
+    return np.sum( np.sum(((Ens - centroide(Ens))**2)) )
+
+
+def init_kmeans(K, Ens):
+    ens_array = np.array(Ens)
+    indices = np.random.choice(a=Ens.shape[0], size=K, replace=False)
+    return ens_array[indices]
+
+
+def plus_proche(Exe,Centres):
+    dist_min = np.inf
+    indice_min = -1
+    for i in range(Centres.shape[0]):
+        if (this_distance := clust.dist_euclidienne(Exe,Centres[i])) < dist_min:
+            dist_min = this_distance
+            indice_min = i
+    return indice_min
+
+
+def affecte_cluster(Base,Centres):
+    result = {j : [] for j in range(len(Centres))}
+    for i,row in Base.iterrows():
+        result[plus_proche(row, Centres)].append(i)
+    return result
+
+
+def nouveaux_centroides(Base,U):
+    return np.asarray([clust.centroide(Base.iloc[v]) for v in U.values()])
+
+
+def inertie_globale(Base, U):
+    return np.sum([inertie_cluster(Base.iloc[v]) for v in U.values()])
+
+
+def kmoyennes(K, Base, epsilon, iter_max, verbose=False):
+    C = init_kmeans(K,Base)                                                          #demander au prof comment il a initialisé J0
+    delta = epsilon+1
+    J0=0
+
+    i=0
+    while i<iter_max and delta > epsilon:
+        U = affecte_cluster(Base, C)
+        C = nouveaux_centroides(Base, U)
+        J1 = inertie_globale(Base, U)
+        delta = np.abs(J1-J0)
+        J0 = J1
+        i += 1
+        if verbose:
+            print(f'iteration {i} Inertie : {J1:.4f} Difference: {delta:.4f}')
+    return C, U
+
+
+def affiche_resultat(Base,Centres,Affect):
+    couleurs = cm.tab20(np.linspace(0, 1, 20))
+
+    assert(len(Affect) <= len(couleurs))    #sinon il faut plus de couleurs
+
+    for x,y in Centres:
+        plt.scatter(x,y,color='red', marker = 'x')
+
+    columns = Base.columns
+    color_index = 0
+    for point_indices in Affect.values():
+        this_color = couleurs[color_index]
+        xs = Base.iloc[point_indices][columns[0]]
+        ys = Base.iloc[point_indices][columns[1]]
+        plt.scatter(xs,ys,color=this_color)
+
+        color_index += 1
+
+
+
+
