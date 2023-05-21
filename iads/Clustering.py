@@ -176,7 +176,7 @@ def plus_proche(Exe,Centres):
     dist_min = np.inf
     indice_min = -1
     for i in range(Centres.shape[0]):
-        if (this_distance := clust.dist_euclidienne(Exe,Centres[i])) < dist_min:
+        if (this_distance := dist_euclidienne(Exe,Centres[i])) < dist_min:
             dist_min = this_distance
             indice_min = i
     return indice_min
@@ -190,7 +190,7 @@ def affecte_cluster(Base,Centres):
 
 
 def nouveaux_centroides(Base,U):
-    return np.asarray([clust.centroide(Base.iloc[v]) for v in U.values()])
+    return np.asarray([centroide(Base.iloc[v]) for v in U.values()])
 
 
 def inertie_globale(Base, U):

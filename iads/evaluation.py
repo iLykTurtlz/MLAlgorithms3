@@ -17,6 +17,14 @@ import copy
 # ------------------------ 
 #TODO: à compléter  plus tard
 # ------------------------ 
+def couts_vect(allw,X,Y):
+    """Version optimisée de couts"""
+    cout_liste = []
+    for w in allw:
+        alphas = np.ones(X.shape[0])
+        alphas -= np.multiply(  np.matmul(X, np.transpose(w)) , Y)
+        cout_liste.append(sum(alphas[alphas > 0]))
+    return cout_liste
 
 def crossval_strat(X, Y, n_iterations, iteration):
     label_set = np.unique(Y)
