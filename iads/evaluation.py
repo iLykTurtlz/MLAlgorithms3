@@ -100,7 +100,7 @@ def validation_croisee(C, DS, nb_iter):
 
 #Clustering
 def inertie_cluster(Ens):
-    return np.sum( np.sum(((Ens - centroide(Ens))**2)) )
+    return np.sum( np.sum(((Ens - clust.centroide(Ens))**2)) )
 
 
 def inertie_globale(Base, U):

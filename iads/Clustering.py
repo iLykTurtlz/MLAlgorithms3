@@ -233,6 +233,34 @@ def affiche_resultat(Base,Centres,Affect):
 
         color_index += 1
 
+def min_dist_intercluster(Centres):
+    dist_min = np.inf
+    for i, centre in enumerate(Centres):
+        for j in range(i+1, Centres.shape[0]):
+            if (this_distance := dist_euclidienne(centre, Centres[j])) < dist_min:
+                dist_min = this_distance
+    return dist_min
+
+
+def max_dist_intracluster(Base, Affect):
+    dist_max = -np.inf
+    for index, examples in Affect.items():
+        for i, example1 in enumerate(examples):
+            for j in range(i+1, len(examples)):
+                example2 = examples[j]
+                if (this_distance := dist_euclidienne(Base.iloc[example1], Base.iloc[example2])) < dist_max:
+                    dist_max = this_distance
+    return this_distance
+
+
+def Dunn(Base, Centres, Affect):
+    #on veut minimiser
+    return max_dist_intracluster(Base, Affect) / min_dist_intercluster(Centres)
+
+
+def XieBeni(Base, Centres, Affect):
+    #on veut minimiser cette valeur
+    return inertie_globale(Base, Affect) / min_dist_intercluster(Centres)
 
 
 
